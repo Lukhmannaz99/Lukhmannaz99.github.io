@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GRC Cybersecurity Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy-mid: #112240;
+    --navy-light: #1D3461;
+    --teal: #00D4AA;
+    --teal-dim: #00A884;
+    --amber: #FFB547;
+    --slate: #8892B0;
+    --slate-light: #A8B2D8;
+    --white: #E6F1FF;
+    --white-dim: #CCD6F6;
+    --card-bg: rgba(255,255,255,0.04);
+    --card-border: rgba(0,212,170,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,22,40,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,212,170,0.1);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--slate);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .nav-links a:hover { color: var(--teal); }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .hero-name span {
+    color: var(--teal);
+    display: block;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 500;
+    color: var(--slate-light);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+
+  .hero-bio {
+    max-width: 640px;
+    font-size: 1rem;
+    color: var(--slate);
+    line-height: 1.8;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .hero-bio strong { color: var(--white-dim); font-weight: 500; }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1s;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 6px 16px;
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    color: var(--teal);
+    background: rgba(0,212,170,0.07);
+    letter-spacing: 0.05em;
+  }
+
+  .badge.amber {
+    color: var(--amber);
+    border-color: rgba(255,181,71,0.3);
+    background: rgba(255,181,71,0.07);
+  }
+
+  .hero-contacts {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1.1s;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(136,146,176,0.3);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .contact-link:hover { color: var(--teal); border-color: var(--teal); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--slate);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: bounce 2s ease infinite;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.5s, bounce 2s ease infinite 2.5s;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .sec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .sec-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .sec-sub {
+    font-size: 0.97rem;
+    color: var(--slate);
+    max-width: 600px;
+    margin-bottom: 56px;
+    line-height: 1.8;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    margin-bottom: 40px;
+  }
+
+  /* ── HONESTY BANNER ── */
+  .honesty-banner {
+    background: linear-gradient(135deg, rgba(255,181,71,0.1), rgba(255,181,71,0.04));
+    border: 1px solid rgba(255,181,71,0.25);
+    border-left: 3px solid var(--amber);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 64px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .honesty-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .honesty-text h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .honesty-text p {
+    font-size: 0.92rem;
+    color: var(--slate-light);
+    line-height: 1.7;
+  }
+
+  /* ── CERT CARDS ── */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .cert-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: transform 0.25s, border-color 0.25s, background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cert-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .cert-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,212,170,0.35);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .cert-card:hover::before { opacity: 1; }
+
+  .cert-provider {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .cert-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 14px;
+    line-height: 1.35;
+  }
+
+  .cert-topics {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cert-topics li {
+    font-size: 0.82rem;
+    color: var(--slate);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .cert-topics li::before {
+    content: '▸';
+    color: var(--teal);
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    margin-top: 3px;
+  }
+
+  .cert-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+
+  .cert-status.completed {
+    background: rgba(0,212,170,0.12);
+    color: var(--teal);
+    border: 1px solid rgba(0,212,170,0.25);
+  }
+
+  .cert-status.in-progress {
+    background: rgba(255,181,71,0.12);
+    color: var(--amber);
+    border: 1px solid rgba(255,181,71,0.25);
+  }
+
+  .cert-status::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── KNOWLEDGE AREAS ── */
+  .knowledge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+
+  .knowledge-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+
+  .knowledge-icon {
+    font-size: 1.6rem;
+    margin-bottom: 14px;
+  }
+
+  .knowledge-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--white-dim);
+    margin-bottom: 10px;
+  }
+
+  .knowledge-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .knowledge-items li {
+    font-size: 0.8rem;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .knowledge-items li::before {
+    content: '—';
+    color: var(--teal);
+    font-size: 0.65rem;
+  }
+
+  /* ── MY APPROACH / VALUES ── */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+
+  .approach-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 28px 24px;
+  }
+
+  .approach-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 500;
+    color: rgba(0,212,170,0.15);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .approach-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white-dim);
+    margin-bottom: 10px;
+  }
+
+  .approach-desc {
+    font-size: 0.88rem;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ── LEARNING PROJECTS ── */
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-bottom: 80px;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+
+  .project-card:hover { border-color: rgba(0,212,170,0.3); }
+
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .project-meta { flex: 1; }
+
+  .project-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  .project-source {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--slate);
+    white-space: nowrap;
+    padding: 6px 14px;
+    border: 1px solid rgba(136,146,176,0.2);
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .project-body {
+    padding: 20px 28px 28px;
+  }
+
+  .project-body h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--slate-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 16px;
+  }
+
+  .project-body h4:first-child { margin-top: 0; }
+
+  .project-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .project-points li {
+    font-size: 0.87rem;
+    color: var(--slate);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    line-height: 1.65;
+  }
+
+  .project-points li::before {
+    content: '▸';
+    color: var(--teal);
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    margin-top: 4px;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: rgba(0,212,170,0.08);
+    color: var(--teal);
+    border: 1px solid rgba(0,212,170,0.15);
+  }
+
+  /* ── MALAYSIA CONTEXT ── */
+  .malaysia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 80px;
+  }
+
+  .reg-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 22px 20px;
+  }
+
+  .reg-acronym {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .reg-fullname {
+    font-size: 0.78rem;
+    color: var(--slate);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .reg-what {
+    font-size: 0.83rem;
+    color: var(--white-dim);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .reg-note {
+    font-size: 0.78rem;
+    color: var(--slate);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── SKILLS BAR ── */
+  .skills-section {
+    margin-bottom: 80px;
+  }
+
+  .skill-group {
+    margin-bottom: 36px;
+  }
+
+  .skill-group-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--white-dim);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .skill-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .skill-item {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .skill-name {
+    font-size: 0.83rem;
+    color: var(--slate-light);
+  }
+
+  .skill-bar-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .skill-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-dim));
+    transition: width 1s ease;
+  }
+
+  .skill-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--slate);
+    white-space: nowrap;
+  }
+
+  /* ── WHAT I CAN DO ── */
+  .offer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+
+  .offer-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+
+  .offer-card:hover { border-color: rgba(0,212,170,0.35); transform: translateY(-3px); }
+
+  .offer-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
+
+  .offer-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .offer-desc {
+    font-size: 0.85rem;
+    color: var(--slate);
+    line-height: 1.75;
+  }
+
+  /* ── LEARNING ROADMAP ── */
+  .roadmap {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 80px;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--teal), rgba(0,212,170,0.1));
+  }
+
+  .roadmap-item {
+    position: relative;
+    margin-bottom: 36px;
+  }
+
+  .roadmap-dot {
+    position: absolute;
+    left: -30px; top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--teal);
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .roadmap-dot.done { background: var(--teal); }
+
+  .roadmap-dot.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 0 4px rgba(255,181,71,0.15);
+  }
+
+  .roadmap-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .roadmap-phase.amber-text { color: var(--amber); }
+
+  .roadmap-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .roadmap-desc {
+    font-size: 0.85rem;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    max-width: 100%;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+    border-top: 1px solid rgba(0,212,170,0.15);
+    border-bottom: 1px solid rgba(0,212,170,0.15);
+    text-align: center;
+    padding: 100px 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .cta-section p {
+    font-size: 1rem;
+    color: var(--slate);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 14px 32px;
+    background: var(--teal);
+    color: var(--navy);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s, transform 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  .btn-outline {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 13px 32px;
+    background: transparent;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .btn-outline:hover { background: rgba(0,212,170,0.1); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 48px;
+    position: relative;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--slate);
+    letter-spacing: 0.05em;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .approach-grid { grid-template-columns: 1fr; }
+    .skill-item { grid-template-columns: 140px 1fr auto; }
+    .cta-section { padding: 80px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">YourName · GRC</div>
+  <ul class="nav-links">
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#knowledge">Knowledge</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#malaysia">Malaysia Context</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Cybersecurity · Governance · Risk · Compliance</p>
+  <h1 class="hero-name">
+    Your Name Here
+    <span>Aspiring GRC Professional</span>
+  </h1>
+  <p class="hero-title">Entry-Level | Malaysia | Actively Upskilling in GRC Cybersecurity</p>
+  <p class="hero-bio">
+    I am building a career in <strong>Governance, Risk & Compliance (GRC)</strong> through structured industry-recognised training from (ISC)², Google, and Macquarie University. While I am at the start of my professional journey, I bring <strong>solid foundational knowledge</strong> of cybersecurity frameworks, risk management principles, and compliance practices — with a strong focus on the Malaysian regulatory landscape.
+  </p>
+  <div class="hero-badges">
+    <span class="badge">ISC² CC Candidate</span>
+    <span class="badge">Google Cybersecurity</span>
+    <span class="badge">Macquarie GRC Specialist</span>
+    <span class="badge amber">Open to Entry-Level & Internship</span>
+    <span class="badge">Kuala Lumpur, Malaysia</span>
+  </div>
+  <div class="hero-contacts">
+    <a href="mailto:your.email@gmail.com" class="contact-link">your.email@gmail.com</a>
+    <a href="#" class="contact-link">+60 1X-XXX XXXX</a>
+    <a href="#" class="contact-link">linkedin.com/in/yourname</a>
+  </div>
+  <p class="scroll-hint">↓ &nbsp; scroll to explore</p>
+</div>
+
+<!-- HONESTY NOTE -->
+<section id="about">
+  <div class="honesty-banner fade-in">
+    <div class="honesty-icon">💡</div>
+    <div class="honesty-text">
+      <h3>A Transparent Introduction</h3>
+      <p>
+        I don't have professional GRC work experience yet — and I'm upfront about that. What I do have is genuine commitment to the field: completed coursework across five recognised cybersecurity and GRC programmes, a growing understanding of frameworks like NIST CSF and ISO 27001, and awareness of Malaysian-specific regulations including PDPA, BNM RMiT, and SC Cybersecurity Guidelines. I am looking for an organisation willing to invest in a motivated learner who will grow with them.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="fade-in">
+    <p class="sec-label">01 · Formal Training</p>
+    <h2 class="sec-title">Certifications & Courses</h2>
+    <p class="sec-sub">Five industry-recognised programmes forming the backbone of my GRC knowledge. Each has directly shaped how I understand cybersecurity governance, risk, and compliance.</p>
+  </div>
+
+  <div class="certs-grid">
+
+    <div class="cert-card fade-in">
+      <p class="cert-provider">ISC²</p>
+      <h3 class="cert-name">Certified in Cybersecurity (CC)</h3>
+      <ul class="cert-topics">
+        <li>Security Principles — CIA Triad, authentication, authorisation, non-repudiation</li>
+        <li>Business Continuity, Disaster Recovery & Incident Response</li>
+        <li>Access Control Concepts — DAC, MAC, RBAC, least privilege</li>
+        <li>Network Security — OSI model, threats, firewalls, IDS/IPS</li>
+        <li>Security Operations — monitoring, data handling, configuration management</li>
+        <li>Aligned to ISC² Code of Ethics — foundation for professional practice</li>
+      </ul>
+      <span class="cert-status completed">Completed / In Progress</span>
+    </div>
+
+    <div class="cert-card fade-in">
+      <p class="cert-provider">Google · Coursera</p>
+      <h3 class="cert-name">Google Cybersecurity Professional Certificate</h3>
+      <ul class="cert-topics">
+        <li>Cybersecurity fundamentals — threats, vulnerabilities, attack types</li>
+        <li>NIST CSF and NIST RMF application in real-world scenarios</li>
+        <li>Security audits and risk assessment methodologies</li>
+        <li>Linux CLI, SQL, Python basics for security operations</li>
+        <li>SIEM tools — log analysis, threat detection with Splunk & Chronicle</li>
+        <li>Incident response lifecycle: detection, analysis, containment</li>
+      </ul>
+      <span class="cert-status completed">Completed</span>
+    </div>
+
+    <div class="cert-card fade-in">
+      <p class="cert-provider">Macquarie University · Coursera</p>
+      <h3 class="cert-name">Cyber Security: Essentials</h3>
+      <ul class="cert-topics">
+        <li>Cyber threat landscape — malware, phishing, social engineering</li>
+        <li>Cryptography basics — symmetric/asymmetric, PKI, TLS/SSL</li>
+        <li>Identity & Access Management (IAM) concepts</li>
+        <li>Secure system design and security-by-design principles</li>
+        <li>Human factors in cybersecurity — insider threats, awareness</li>
+      </ul>
+      <span class="cert-status completed">Completed</span>
+    </div>
+
+    <div class="cert-card fade-in">
+      <p class="cert-provider">Macquarie University · Coursera</p>
+      <h3 class="cert-name">Cyber Security: GRC Part 1 — Governance</h3>
+      <ul class="cert-topics">
+        <li>Cybersecurity governance frameworks — roles of Board, C-suite, CISO</li>
+        <li>Policy development hierarchy — Policies, Standards, Procedures, Guidelines</li>
+        <li>IT governance frameworks: COBIT, ITIL in GRC context</li>
+        <li>Security culture and awareness programme design</li>
+        <li>Regulatory environment and compliance obligations overview</li>
+        <li>Ethics and professional responsibility in cybersecurity governance</li>
+      </ul>
+      <span class="cert-status completed">Completed</span>
+    </div>
+
+    <div class="cert-card fade-in">
+      <p class="cert-provider">Macquarie University · Coursera</p>
+      <h3 class="cert-name">Cyber Security: GRC Part 2 — Risk & Compliance</h3>
+      <ul class="cert-topics">
+        <li>Risk management lifecycle — identification, assessment, treatment, monitoring</li>
+        <li>Qualitative vs quantitative risk analysis methods</li>
+        <li>ISO 31000 and NIST RMF risk management approaches</li>
+        <li>Compliance frameworks — ISO 27001, PCI DSS, SOC 2 overview</li>
+        <li>Third-party and supply chain risk management</li>
+        <li>Audit and assurance processes — internal audit, evidence collection</li>
+      </ul>
+      <span class="cert-status completed">Completed</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- KNOWLEDGE AREAS -->
+<section id="knowledge">
+  <div class="fade-in">
+    <p class="sec-label">02 · What I Know</p>
+    <h2 class="sec-title">Knowledge Areas</h2>
+    <p class="sec-sub">Key concepts and domains I have studied across my five programmes — applied understanding, not just theory.</p>
+  </div>
+
+  <div class="knowledge-grid fade-in">
+    <div class="knowledge-card">
+      <div class="knowledge-icon">🏛️</div>
+      <h4 class="knowledge-title">Security Governance</h4>
+      <ul class="knowledge-items">
+        <li>Board & CISO accountability structures</li>
+        <li>Policy / Standard / Procedure hierarchy</li>
+        <li>COBIT 2019 governance principles</li>
+        <li>Security culture & awareness design</li>
+        <li>Three Lines of Defence model</li>
+      </ul>
+    </div>
+    <div class="knowledge-card">
+      <div class="knowledge-icon">⚠️</div>
+      <h4 class="knowledge-title">Risk Management</h4>
+      <ul class="knowledge-items">
+        <li>Risk identification & threat modelling</li>
+        <li>Qualitative & quantitative risk analysis</li>
+        <li>Risk treatment: accept, avoid, transfer, mitigate</li>
+        <li>ISO 31000 & NIST RMF approaches</li>
+        <li>Risk registers & risk appetite</li>
+      </ul>
+    </div>
+    <div class="knowledge-card">
+      <div class="knowledge-icon">📋</div>
+      <h4 class="knowledge-title">Compliance & Frameworks</h4>
+      <ul class="knowledge-items">
+        <li>NIST Cybersecurity Framework (CSF) 2.0</li>
+        <li>ISO/IEC 27001:2022 overview</li>
+        <li>CIS Controls v8 basics</li>
+        <li>PCI DSS, SOC 2 concepts</li>
+        <li>Audit & evidence collection basics</li>
+      </ul>
+    </div>
+    <div class="knowledge-card">
+      <div class="knowledge-icon">🔐</div>
+      <h4 class="knowledge-title">Security Foundations</h4>
+      <ul class="knowledge-items">
+        <li>CIA Triad & security principles</li>
+        <li>Cryptography (symmetric, asymmetric, PKI)</li>
+        <li>Access control: RBAC, MAC, DAC</li>
+        <li>Network security concepts</li>
+        <li>Identity & Access Management (IAM)</li>
+      </ul>
+    </div>
+    <div class="knowledge-card">
+      <div class="knowledge-icon">🚨</div>
+      <h4 class="knowledge-title">Incident Response & BCP</h4>
+      <ul class="knowledge-items">
+        <li>Incident response lifecycle (NIST SP 800-61)</li>
+        <li>Business Continuity Planning (BCP)</li>
+        <li>Disaster Recovery concepts (RTO/RPO)</li>
+        <li>SIEM basics — log analysis, alerting</li>
+        <li>Evidence handling & chain of custody</li>
+      </ul>
+    </div>
+    <div class="knowledge-card">
+      <div class="knowledge-icon">🤝</div>
+      <h4 class="knowledge-title">Third-Party & Supply Chain</h4>
+      <ul class="knowledge-items">
+        <li>Vendor risk assessment concepts</li>
+        <li>Third-party due diligence process</li>
+        <li>Contractual security requirements</li>
+        <li>Supply chain threat awareness</li>
+        <li>Outsourcing risk considerations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SKILLS PROFICIENCY -->
+  <div class="skills-section fade-in">
+    <div class="skill-group">
+      <p class="skill-group-title">GRC Domains (Theory & Study)</p>
+      <div class="skill-row">
+        <div class="skill-item">
+          <span class="skill-name">Risk Assessment Concepts</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div>
+          <span class="skill-level">Strong theory</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Security Governance</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:75%"></div></div>
+          <span class="skill-level">Strong theory</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Compliance Frameworks</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:70%"></div></div>
+          <span class="skill-level">Solid foundation</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Policy Writing</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:60%"></div></div>
+          <span class="skill-level">Developing</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Audit & Assurance</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:55%"></div></div>
+          <span class="skill-level">Developing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <p class="skill-group-title">Technical Exposure</p>
+      <div class="skill-row">
+        <div class="skill-item">
+          <span class="skill-name">SIEM / Log Analysis</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:55%"></div></div>
+          <span class="skill-level">Basic hands-on</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Linux CLI</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:50%"></div></div>
+          <span class="skill-level">Basic</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">SQL for Security</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:45%"></div></div>
+          <span class="skill-level">Introductory</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Python Basics</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:40%"></div></div>
+          <span class="skill-level">Introductory</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARNING PROJECTS -->
+<section id="projects">
+  <div class="fade-in">
+    <p class="sec-label">03 · Applied Learning</p>
+    <h2 class="sec-title">Study Projects & Exercises</h2>
+    <p class="sec-sub">These are coursework-based and self-directed study projects — not professional engagements. They demonstrate how I apply concepts I have learned to realistic GRC scenarios.</p>
+  </div>
+
+  <div class="projects-list">
+
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <div class="project-meta">
+          <p class="project-tag">Risk Management · NIST RMF</p>
+          <h3 class="project-title">Cybersecurity Risk Assessment — Simulated SME (Study Exercise)</h3>
+          <p class="project-desc">Applied the NIST Risk Management Framework (RMF) steps to a simulated small business scenario covered in the Google Cybersecurity course, identifying and evaluating security risks.</p>
+        </div>
+        <span class="project-source">Google / Coursera</span>
+      </div>
+      <div class="project-body">
+        <h4>What I Practised</h4>
+        <ul class="project-points">
+          <li>Completed a mock asset inventory listing information assets, their sensitivity level, and responsible owners</li>
+          <li>Identified threats and vulnerabilities for each asset using a structured risk register template</li>
+          <li>Calculated risk likelihood and impact using a 5×5 qualitative risk matrix, producing a risk heat map</li>
+          <li>Recommended appropriate risk treatments (Mitigate, Accept, Transfer, Avoid) for each identified risk</li>
+          <li>Documented risk assessment findings in a structured report format aligned to NIST SP 800-30</li>
+        </ul>
+        <h4>Key Concepts Applied</h4>
+        <div class="project-tags">
+          <span class="tag">NIST SP 800-30</span>
+          <span class="tag">Risk Register</span>
+          <span class="tag">Threat Identification</span>
+          <span class="tag">Risk Matrix</span>
+          <span class="tag">Risk Treatment</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <div class="project-meta">
+          <p class="project-tag">Governance · Policy Development</p>
+          <h3 class="project-title">Cybersecurity Policy Framework Draft — Study Assignment</h3>
+          <p class="project-desc">Designed a mini security policy framework based on Macquarie University's GRC Part 1 module, covering policy hierarchy and governance structures for a hypothetical organisation.</p>
+        </div>
+        <span class="project-source">Macquarie / Coursera</span>
+      </div>
+      <div class="project-body">
+        <h4>What I Practised</h4>
+        <ul class="project-points">
+          <li>Mapped out the governance structure: Board, Risk Committee, CISO, and IT Security team responsibilities</li>
+          <li>Drafted a sample Information Security Policy statement aligned to ISO 27001 Annex A structure</li>
+          <li>Created a policy-to-standard-to-procedure document hierarchy showing how top-level policy cascades to operational controls</li>
+          <li>Identified key stakeholders for policy review, approval, and communication</li>
+          <li>Applied the Three Lines of Defence model to assign risk oversight responsibilities</li>
+        </ul>
+        <h4>Key Concepts Applied</h4>
+        <div class="project-tags">
+          <span class="tag">Policy Hierarchy</span>
+          <span class="tag">ISO 27001</span>
+          <span class="tag">Three Lines of Defence</span>
+          <span class="tag">CISO Accountability</span>
+          <span class="tag">COBIT 2019</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <div class="project-meta">
+          <p class="project-tag">Compliance · NIST CSF</p>
+          <h3 class="project-title">NIST CSF 2.0 Gap Analysis — Self-Directed Study</h3>
+          <p class="project-desc">Performed a simulated NIST CSF 2.0 current-state gap analysis for a hypothetical Malaysian e-commerce business, mapping existing (imagined) controls to the six CSF Functions.</p>
+        </div>
+        <span class="project-source">Self-Directed</span>
+      </div>
+      <div class="project-body">
+        <h4>What I Practised</h4>
+        <ul class="project-points">
+          <li>Downloaded and studied the NIST CSF 2.0 framework core — all six Functions (GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER) and their Categories</li>
+          <li>Created a gap analysis spreadsheet with columns: CSF Function, Category, Subcategory, Current State, Target State, Gap Description, Priority</li>
+          <li>Simulated a Tier 1 (Partial) current state and documented gaps to reach Tier 2 (Risk Informed) for 20 selected Subcategories</li>
+          <li>Produced a mock remediation roadmap with suggested control improvements and responsible owners</li>
+          <li>Drafted an executive summary explaining findings in non-technical language suitable for a hypothetical Board audience</li>
+        </ul>
+        <h4>Key Concepts Applied</h4>
+        <div class="project-tags">
+          <span class="tag">NIST CSF 2.0</span>
+          <span class="tag">Gap Analysis</span>
+          <span class="tag">CSF Tiers</span>
+          <span class="tag">Remediation Roadmap</span>
+          <span class="tag">Executive Reporting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <div class="project-meta">
+          <p class="project-tag">Incident Response · BCP</p>
+          <h3 class="project-title">Incident Response Tabletop Scenario — Course Exercise</h3>
+          <p class="project-desc">Worked through a structured phishing-to-ransomware tabletop exercise as part of the Google Cybersecurity course, applying the NIST incident response lifecycle.</p>
+        </div>
+        <span class="project-source">Google / Coursera</span>
+      </div>
+      <div class="project-body">
+        <h4>What I Practised</h4>
+        <ul class="project-points">
+          <li>Followed a realistic phishing attack scenario through all four NIST phases: Preparation, Detection & Analysis, Containment/Eradication/Recovery, Post-Incident Activity</li>
+          <li>Completed an Incident Handler's Journal documenting timeline, actions taken, tools used, and evidence collected</li>
+          <li>Practised using Splunk (simulated environment) to analyse suspicious log entries and identify Indicators of Compromise (IoCs)</li>
+          <li>Drafted a post-incident report with lessons learned and recommended control improvements</li>
+          <li>Connected incident response steps to BCP/DR planning — identifying which business functions would be impacted and what recovery sequence should apply</li>
+        </ul>
+        <h4>Key Concepts Applied</h4>
+        <div class="project-tags">
+          <span class="tag">NIST SP 800-61</span>
+          <span class="tag">Incident Handler's Journal</span>
+          <span class="tag">IoC Analysis</span>
+          <span class="tag">Splunk Basics</span>
+          <span class="tag">Post-Incident Report</span>
+          <span class="tag">BCP/DR</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <div class="project-meta">
+          <p class="project-tag">Privacy · Data Protection</p>
+          <h3 class="project-title">PDPA Malaysia Compliance Checklist — Self-Study Research</h3>
+          <p class="project-desc">Researched the Malaysian Personal Data Protection Act 2010 (PDPA) and mapped its seven principles to practical controls, producing a personal study reference guide.</p>
+        </div>
+        <span class="project-source">Self-Directed</span>
+      </div>
+      <div class="project-body">
+        <h4>What I Practised</h4>
+        <ul class="project-points">
+          <li>Read and summarised all seven PDPA 2010 principles: General, Notice, Choice, Disclosure, Security, Retention, Data Integrity, and Access</li>
+          <li>Created a compliance checklist mapping each principle to practical organisational controls (e.g., Privacy Notice, Consent forms, Data Retention Policy)</li>
+          <li>Researched the proposed PDPD amendments — focusing on mandatory breach notification timelines and the upcoming Data Protection Officer (DPO) requirement</li>
+          <li>Compared Malaysia's PDPA with GDPR at a high level to understand international data protection alignment</li>
+          <li>Identified which BNM RMiT provisions overlap with PDPA obligations for financial sector organisations</li>
+        </ul>
+        <h4>Key Concepts Applied</h4>
+        <div class="project-tags">
+          <span class="tag">PDPA 2010</span>
+          <span class="tag">PDPD Amendments</span>
+          <span class="tag">7 Principles</span>
+          <span class="tag">Data Mapping</span>
+          <span class="tag">Breach Notification</span>
+          <span class="tag">GDPR Comparison</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MALAYSIA REGULATORY CONTEXT -->
+<section id="malaysia">
+  <div class="fade-in">
+    <p class="sec-label">04 · Local Relevance</p>
+    <h2 class="sec-title">Malaysian Regulatory Awareness</h2>
+    <p class="sec-sub">My courses do not cover Malaysian regulations directly — so I took the initiative to self-study the local regulatory landscape. Here is what I understand about the key regulations employers in Malaysia will expect me to know.</p>
+  </div>
+
+  <div class="malaysia-grid fade-in">
+    <div class="reg-card">
+      <div class="reg-acronym">PDPA</div>
+      <p class="reg-fullname">Personal Data Protection Act 2010 (Act 709)</p>
+      <p class="reg-what">Data privacy law for commercial entities</p>
+      <p class="reg-note">Governs collection, processing, and storage of personal data. I have studied the 7 principles and upcoming PDPD amendments including mandatory breach notification and DPO requirements.</p>
+    </div>
+    <div class="reg-card">
+      <div class="reg-acronym">RMiT</div>
+      <p class="reg-fullname">BNM Risk Management in Technology Policy</p>
+      <p class="reg-what">Cybersecurity regulation for financial institutions</p>
+      <p class="reg-note">Bank Negara Malaysia's primary tech risk policy. I understand its structure covering Governance, Technology Risk, Cyber Risk, Cloud/Outsourcing, and Resilience — relevant for banking/finance GRC roles.</p>
+    </div>
+    <div class="reg-card">
+      <div class="reg-acronym">SC</div>
+      <p class="reg-fullname">Securities Commission Cyber Risk Guidelines</p>
+      <p class="reg-what">Cyber risk rules for capital market participants</p>
+      <p class="reg-note">Guidelines on Management of Cyber Risk applicable to brokers, fund managers, and market intermediaries. Aligned to the Identify-Protect-Detect-Respond-Recover structure of NIST CSF.</p>
+    </div>
+    <div class="reg-card">
+      <div class="reg-acronym">NACSA</div>
+      <p class="reg-fullname">National Cyber Security Agency Malaysia</p>
+      <p class="reg-what">National cybersecurity coordinator & CII regulator</p>
+      <p class="reg-note">Oversees Critical Information Infrastructure (CII) sectors. I am aware of mandatory incident reporting to NACSA/MyCERT and the National Cyber Security Policy (NCSP) 2020.</p>
+    </div>
+    <div class="reg-card">
+      <div class="reg-acronym">CCA</div>
+      <p class="reg-fullname">Computer Crimes Act 1997 (Act 563)</p>
+      <p class="reg-what">Criminalises unauthorised computer access</p>
+      <p class="reg-note">Malaysia's primary cybercrime law. Relevant to GRC for defining legal liability around unauthorised access, data modification, and wrongful communication of access codes.</p>
+    </div>
+    <div class="reg-card">
+      <div class="reg-acronym">MCMC</div>
+      <p class="reg-fullname">Malaysian Communications & Multimedia Commission</p>
+      <p class="reg-what">Telecoms & internet sector regulator</p>
+      <p class="reg-note">Regulates communications networks under CMA 1998. Security provisions relevant to telcos and ISPs; coordinates with NACSA on national cybersecurity incidents.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT I CAN OFFER -->
+<section id="offer">
+  <div class="fade-in">
+    <p class="sec-label">05 · My Contribution</p>
+    <h2 class="sec-title">What I Can Offer an Employer</h2>
+    <p class="sec-sub">As an entry-level candidate, here is where I can genuinely add value from day one — and what I am eager to grow into.</p>
+  </div>
+
+  <div class="offer-grid fade-in">
+    <div class="offer-card">
+      <div class="offer-icon">📊</div>
+      <h3 class="offer-title">Risk Register Support</h3>
+      <p class="offer-desc">Assist with maintaining and updating risk registers, conducting initial risk identification exercises, and populating risk assessment templates under senior guidance.</p>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">📝</div>
+      <h3 class="offer-title">Policy & Documentation</h3>
+      <p class="offer-desc">Draft and format security policies, standards, and procedures. Conduct desktop reviews of existing documents against framework requirements and identify gaps.</p>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">✅</div>
+      <h3 class="offer-title">Compliance Checklists</h3>
+      <p class="offer-desc">Prepare and populate compliance assessment checklists against NIST CSF, ISO 27001, PDPA, or BNM RMiT requirements — supporting senior auditors and GRC analysts.</p>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">🔍</div>
+      <h3 class="offer-title">Research & Regulatory Tracking</h3>
+      <p class="offer-desc">Monitor regulatory updates from BNM, SC, NACSA, PDPC and summarise implications for the organisation. Prepare briefing notes on new circulars or guidelines.</p>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">📈</div>
+      <h3 class="offer-title">Reporting & Dashboards</h3>
+      <p class="offer-desc">Support preparation of GRC reports and KPI dashboards using Excel or Power BI. Compile data from multiple sources into clear, consistent risk reporting formats.</p>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">🎓</div>
+      <h3 class="offer-title">Fast Learning & Growth</h3>
+      <p class="offer-desc">Demonstrated ability to learn independently — completed five cybersecurity programmes and self-studied Malaysian regulations without employer direction. Ready to grow with your team.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LEARNING ROADMAP -->
+<section id="roadmap">
+  <div class="fade-in">
+    <p class="sec-label">06 · Career Plan</p>
+    <h2 class="sec-title">My Learning Roadmap</h2>
+    <p class="sec-sub">This is where I am today and where I am actively heading. I believe in being intentional about growth.</p>
+  </div>
+
+  <div class="roadmap fade-in">
+    <div class="roadmap-item">
+      <div class="roadmap-dot done"></div>
+      <p class="roadmap-phase">Phase 1 · Completed</p>
+      <h3 class="roadmap-title">Cybersecurity Foundations</h3>
+      <p class="roadmap-desc">Completed ISC² CC, Google Cybersecurity Certificate, Macquarie Cybersecurity Essentials. Built strong foundation in security principles, CIA Triad, access control, cryptography, and networking basics.</p>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot done"></div>
+      <p class="roadmap-phase">Phase 2 · Completed</p>
+      <h3 class="roadmap-title">GRC Specialisation</h3>
+      <p class="roadmap-desc">Completed Macquarie GRC Part 1 (Governance) and GRC Part 2 (Risk Management & Compliance). Now fluent in security governance frameworks, risk management lifecycle, compliance obligations, and audit basics.</p>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot active"></div>
+      <p class="roadmap-phase amber-text">Phase 3 · Current</p>
+      <h3 class="roadmap-title">Malaysian Regulatory Self-Study & Job Entry</h3>
+      <p class="roadmap-desc">Self-studying BNM RMiT, PDPA/PDPD, SC Cybersecurity Guidelines, and NACSA requirements. Actively applying for entry-level GRC analyst, compliance associate, or cybersecurity internship roles.</p>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <p class="roadmap-phase">Phase 4 · Planned — Year 1–2</p>
+      <h3 class="roadmap-title">Professional Certification: CISM or ISO 27001 LA</h3>
+      <p class="roadmap-desc">Plan to pursue either ISACA CISM or ISO/IEC 27001:2022 Lead Implementer (PECB/BSI) once I have 1–2 years of work experience. Also considering ISACA CDPSE for privacy specialisation given PDPD developments in Malaysia.</p>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <p class="roadmap-phase">Phase 5 · Planned — Year 3+</p>
+      <h3 class="roadmap-title">Senior GRC Practitioner — Malaysian Financial Sector Focus</h3>
+      <p class="roadmap-desc">Long-term goal is to become a GRC specialist with deep expertise in BNM RMiT, PDPA, and NIST CSF — supporting financial institutions, GLCs, or consulting firms operating in Malaysia's regulated sectors.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="values">
+  <div class="fade-in">
+    <p class="sec-label">07 · How I Work</p>
+    <h2 class="sec-title">My Professional Approach</h2>
+    <p class="sec-sub">Values and working principles I bring even at the start of my career.</p>
+  </div>
+
+  <div class="approach-grid fade-in">
+    <div class="approach-card">
+      <div class="approach-num">01</div>
+      <h3 class="approach-title">Honesty Over Overconfidence</h3>
+      <p class="approach-desc">I distinguish clearly between what I know from study and what I have not yet applied professionally. I would rather ask good questions and learn correctly than pretend to expertise I have not earned.</p>
+    </div>
+    <div class="approach-card">
+      <div class="approach-num">02</div>
+      <h3 class="approach-title">Self-Directed Learning</h3>
+      <p class="approach-desc">I do not wait to be taught — I researched Malaysian regulations like BNM RMiT and PDPA independently because I knew they would be relevant. I will do the same on the job.</p>
+    </div>
+    <div class="approach-card">
+      <div class="approach-num">03</div>
+      <h3 class="approach-title">Business Context First</h3>
+      <p class="approach-desc">GRC only adds value when it enables the business, not when it creates bureaucratic overhead. I approach compliance as a tool for organisational resilience, not a checkbox exercise.</p>
+    </div>
+    <div class="approach-card">
+      <div class="approach-num">04</div>
+      <h3 class="approach-title">Structured & Detail-Oriented</h3>
+      <p class="approach-desc">Risk registers, policy documents, audit evidence, compliance checklists — GRC work requires precision. I take pride in being methodical, thorough, and producing clean, well-structured deliverables.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Let's Talk About What's Possible</h2>
+  <p>I am actively looking for an entry-level GRC role, cybersecurity compliance associate position, or internship in Malaysia. If you are building a GRC team and value potential alongside honesty, I would love to connect.</p>
+  <div class="cta-buttons">
+    <a href="mailto:your.email@gmail.com" class="btn-primary">Get In Touch</a>
+    <a href="#certifications" class="btn-outline">View My Training</a>
+  </div>
+</div>
+
+<footer>
+  <p>YourName · Aspiring GRC Cybersecurity Professional · Kuala Lumpur, Malaysia · Built with intention, not pretension</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Stagger children in grids
+  document.querySelectorAll('.certs-grid, .knowledge-grid, .offer-grid, .malaysia-grid').forEach(grid => {
+    grid.querySelectorAll('.cert-card, .knowledge-card, .offer-card, .reg-card').forEach((card, i) => {
+      card.style.transitionDelay = `${i * 0.07}s`;
+    });
+  });
+</script>
+</body>
+</html>
